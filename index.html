@@ -1,205 +1,343 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <title>Обзор биометрии — презентация</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta charset="utf-8" />
+  <title>История компании NVIDIA — Shower</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <!-- Если у вас есть shower в проекте, эти пути оставьте. Если нет — позже могу показать как заменить на CDN -->
+  <!-- Стандартная тема Ribbon, но мы её переопределяем -->
   <link rel="stylesheet" href="node_modules/@shower/ribbon/styles/styles.css">
 
   <style>
-    .shower { --slide-ratio: calc(16 / 9); }
-    .slide { padding: 36px; }
-    .slide .lead { color: #9fb0c3; margin-top: 6px; }
-    .columns.two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-    .note { font-style: italic; color: #9fb0c3; }
-    .small { font-size: .9rem; color: #9fb0c3; }
-    .progress { position: fixed; bottom: 6px; left: 0; right: 0; height: 4px; }
-    /* адаптация изображений, если будете вставлять */
-    .img-wrap { width: 100%; display: grid; place-items: center; }
-    .img-wrap img { max-width: 100%; height: auto; }
+    :root{
+      --page-bg: #111827;   /* фон под слайдами (list-режим) */
+      --slide-bg: #ffffff;  /* фон самих слайдов */
+      --accent:   #16a34a;  /* зелёный NVIDIA */
+      --muted:    #6b7280;
+    }
+
+    body{
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* тёмный фон всей «сцены» */
+    .shower{
+      --slide-ratio: calc(16 / 9);
+      background: var(--page-bg);
+    }
+
+    /* карточка-слайд, размеры остаются как в Ribbon */
+    .slide{
+      position: relative;
+      background: var(--slide-bg);
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.5);
+      padding: 50px 70px;
+      box-sizing: border-box;
+    }
+
+    /* несколько слайдов с рамкой */
+    #s2, #s4, #s6, #s8{
+      border: 3px solid rgba(22,163,74,.85);
+    }
+
+    /* ограничение ширины контента */
+    .slide > *{
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* заголовки и текст */
+    h2{
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    h3{
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-size: 20px;
+      color: #064e3b;
+    }
+
+    p{
+      font-size: 16px;
+      line-height: 1.6;
+      color: #111827;
+    }
+
+    p.lead{
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    p.small{
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    ul{
+      padding-left: 22px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    li{ margin-bottom: 6px; }
+
+    strong{ color: #065f46; }
+
+    /* Номера слайдов: зелёный кружок вместо красной закладки */
+    .slide::after{
+      content: counter(slide);
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(22,163,74,.6);
+    }
+    /* отключаем треугольник-«хвостик» у закладки */
+    .slide::before{
+      content: none !important;
+    }
+
+    /* первый слайд — чуть более «геройский» */
+    #s1{
+      background: linear-gradient(135deg, #d1fae5, #f0fdf4);
+      text-align: center;
+    }
+    #s1 h2{
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    #s1 p.lead{
+      font-size: 20px;
+    }
+    #s1 p.small{
+      margin-top: 18px;
+    }
+
+    /* caption по центру */
+    .caption{
+      text-align: center;
+    }
+
+    /* две колонки */
+    .columns.two{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: flex-start;
+      margin-top: 10px;
+    }
+    .columns.two p{
+      color: var(--muted);
+    }
+
+    /* Таймлайн для ключевых этапов */
+    .timeline{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .timeline .step{
+      flex: 1 1 200px;
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 2px solid rgba(22,163,74,.55);
+      box-shadow: 0 8px 22px rgba(0,0,0,.08);
+    }
+    .timeline .year{
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 18px;
+    }
+    .timeline .txt{
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* адаптив */
+    @media (max-width:900px){
+      .slide{
+        padding: 32px 20px;
+      }
+      .columns.two{
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body class="shower list">
 
   <header class="caption">
-    <h1>Обзор биометрии</h1>
-    <p>Современные технологии — применение и влияние</p>
+    <h1>История компании NVIDIA</h1>
+    <p>Волкова Анна — ИУ3-31М</p>
   </header>
 
   <!-- 1. Титул -->
-  <section class="slide" id="title">
-    <h2>Обзор биометрии</h2>
-    <p class="lead">Современные технологии, области применения и социально-этические аспекты</p>
-    <p class="small">Автор: <strong>Коровин Аким</p>
+  <section class="slide" id="s1">
+    <h2>История компании NVIDIA</h2>
+    <p class="lead">От первых графических ускорителей до лидера рынка GPU и ИИ</p>
+    <p class="small">Волкова Анна — ИУ3-31М</p>
   </section>
 
-  <!-- 2. План -->
-  <section class="slide" id="plan">
-    <h2>План презентации</h2>
-    <ol>
-      <li>Что такое биометрия</li>
-      <li>Основные виды биометрических данных</li>
-      <li>Методы измерения и распознавания</li>
-      <li>Применения в реальном мире</li>
-      <li>Проблемы, безопасность и приватность</li>
-      <li>Кейсы и примеры</li>
-      <li>Выводы и рекомендации</li>
-    </ol>
+  <!-- 2. Зарождение -->
+  <section class="slide" id="s2">
+    <h2>Зарождение NVIDIA: команда и первые шаги</h2>
+    <p>Компания NVIDIA была основана 5 апреля 1993 года тремя инженерами с опытом работы в LSI Logic, AMD и Sun Microsystems.</p>
+    <ul>
+      <li>С самого начала фокус на 3D-графике и игровых приложениях.</li>
+      <li>Работа с массовым рынком ПК и игровых консолей.</li>
+      <li>Название «NVIDIA» произошло от искажённой латинской «invidia», что означает «зависть».</li>
+    </ul>
   </section>
 
-  <!-- 3. Определение -->
-  <section class="slide" id="definition">
-    <h2>Что такое биометрия?</h2>
-    <p>Биометрия — набор методов идентификации и верификации личности на основе уникальных физических или поведенческих характеристик.</p>
-    <p class="note">Примеры: отпечатки пальцев, лицо, радужная оболочка, голос, походка, покров кожи.</p>
+  <!-- 3. NV1 -->
+  <section class="slide" id="s3">
+    <h2>NV1: первый крупный продукт</h2>
+    <p>NV1 объединял 2D/3D-ускорение, звук и поддержку геймпада, но использовал квадратичные текстуры, плохо совместимые с растущими стандартами треугольной геометрии.</p>
+    <p>Из-за слабой поддержки игр и высоких затрат NVIDIA к 1996 году оказалась на грани банкротства, однако контракт с Sega помог компании удержаться на плаву.</p>
+    <p class="lead">Ключевой вывод — необходимость следовать стандартам DirectX и OpenGL, что стало краеугольным камнем дальнейшей стратегии развития.</p>
   </section>
 
-  <!-- 4. Виды биометрии -->
-  <section class="slide" id="types">
-    <h2>Основные виды биометрических признаков</h2>
-    <div class="columns two">
+  <!-- 4. Эра RIVA (с рамкой) -->
+  <section class="slide" id="s4">
+    <h2>Эра RIVA</h2>
+
+    <div class="columns.two">
       <div>
-        <h3>Физические</h3>
-        <ul>
-          <li>Отпечатки пальцев</li>
-          <li>Распознавание лица</li>
-          <li>Ирис/радужная оболочка</li>
-          <li>Линейные характеристики руки</li>
-        </ul>
+        <h3>RIVA 128 и поддержка DirectX</h3>
+        <p>Выпущенная в 1997 году RIVA 128 предложила выдающуюся производительность и полную совместимость с DirectX, завоевав доверие OEM-партнёров и расширив клиентскую базу NVIDIA.</p>
       </div>
       <div>
-        <h3>Поведенческие</h3>
-        <ul>
-          <li>Голосовая биометрия</li>
-          <li>Подпись и почерк</li>
-          <li>Походка/жесты</li>
-          <li>Паттерны ввода (keystroke dynamics)</li>
-        </ul>
+        <h3>Прорыв с RIVA TNT</h3>
+        <p>В 1998 году RIVA TNT внедрила два текстурных блока, улучшив качество графики и скорость рендеринга, что позволило NVIDIA уверенно конкурировать с лидерами рынка.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:18px;">Успех серии RIVA обеспечил компании финансовую устойчивость и технический фундамент для создания революционного GeForce&nbsp;256.</p>
+  </section>
+
+  <!-- 5. GeForce 256 -->
+  <section class="slide" id="s5">
+    <h2>Технический прорыв GeForce 256: введение GPU</h2>
+    <p>GeForce 256 стал первым графическим процессором, официально названным GPU. Интеграция блока Transform &amp; Lighting разгрузила CPU и открыла новую эру параллельных графических вычислений.</p>
+    <p class="lead">GeForce 256 установил новый стандарт производительности и задал тренд развития графических процессоров на многие годы вперёд.</p>
+    <p class="small">Источник: AnandTech, 1999.</p>
+  </section>
+
+  <!-- 6. Ключевые этапы (таймлайн с рамками) -->
+  <section class="slide" id="s6">
+    <h2>Ключевые этапы расширения NVIDIA и продуктов</h2>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="year">1993 год</div>
+        <div class="txt">Основание NVIDIA и выпуск первых графических процессоров для персональных компьютеров.</div>
+      </div>
+      <div class="step">
+        <div class="year">Начало 2000-х</div>
+        <div class="txt">Выход серии GeForce, которая вывела качество игровой графики на новый уровень.</div>
+      </div>
+      <div class="step">
+        <div class="year">2010 год</div>
+        <div class="txt">Развитие архитектуры CUDA для ускорения вычислений на GPU.</div>
+      </div>
+      <div class="step">
+        <div class="year">2016 год</div>
+        <div class="txt">Активное внедрение технологий искусственного интеллекта и глубокого обучения в продукты NVIDIA.</div>
+      </div>
+      <div class="step">
+        <div class="year">Современный этап</div>
+        <div class="txt">Расширение деятельности в сферах автопилота, HPC и дата-центров на базе GPU и ИИ.</div>
       </div>
     </div>
   </section>
 
-  <!-- 5. Методы и технологии -->
-  <section class="slide" id="methods">
-    <h2>Методы измерения и распознавания</h2>
-    <ul>
-      <li>Сенсорное сканирование (optical, capacitive)</li>
-      <li>Камеры и компьютерное зрение (CNN и глубокие нейросети)</li>
-      <li>Акустические методы для голоса</li>
-      <li>Сравнение шаблонов, вероятностные модели и f-score</li>
-    </ul>
-    <p class="small">Технические компоненты: сбор данных → предобработка → извлечение признаков → сравнение/классификация.</p>
+  <!-- 7. CUDA и рост экосистемы -->
+  <section class="slide" id="s7">
+    <h2>2006: запуск CUDA и рост экосистемы</h2>
+
+    <div class="columns.two">
+      <div>
+        <h3>2006: запуск CUDA</h3>
+        <p>Платформа CUDA открыла GPU для общенаучных задач, позволив существенно ускорить физические, финансовые и медицинские вычисления.</p>
+      </div>
+      <div>
+        <h3>Рост экосистемы</h3>
+        <p>Появились новые инструменты и библиотеки, упрощающие разработку параллельных программ и расширяющие круг специалистов, использующих GPU.</p>
+      </div>
+    </div>
+
+    <h3>Расширение рынков и основа для ИИ</h3>
+    <p>CUDA обеспечила рост применения GPU в исследовательских и прикладных областях за пределами графики и стала фундаментом для развития глубокого обучения и высокопроизводительных вычислений в науке.</p>
   </section>
 
-  <!-- 6. Критерии качества -->
-  <section class="slide" id="metrics">
-    <h2>Критерии оценки систем</h2>
-    <ul>
-      <li>Точность (FAR, FRR)</li>
-      <li>Устойчивость к шуму и условиям съёмки</li>
-      <li>Скорость обработки</li>
-      <li>Удобство использования (UX) и отказоустойчивость</li>
-    </ul>
+  <!-- 8. Эра ИИ и суперкомпьютеров (с рамкой) -->
+  <section class="slide" id="s8">
+    <h2>Эра искусственного интеллекта и суперкомпьютеров</h2>
+
+    <div class="columns.two">
+      <div>
+        <h3>Ускорители Tesla и их наследники</h3>
+        <p>Линейки Tesla, а затем A100, H100 и Blackwell обеспечивают вычислительную мощь для систем искусственного интеллекта и центров обработки данных.</p>
+      </div>
+      <div>
+        <h3>Платформенные решения NVIDIA</h3>
+        <p>NVIDIA DRIVE, Clara и Omniverse формируют экосистемы для автономного транспорта, медицины и виртуальных миров.</p>
+      </div>
+    </div>
+
+    <h3>Укрепление позиций в суперкомпьютерах</h3>
+    <p>Покупка Mellanox усилила контроль NVIDIA над высокоскоростными сетями, критически важными для масштабных суперкомпьютерных систем.</p>
   </section>
 
-  <!-- 7. Области применения -->
-  <section class="slide" id="applications">
-    <h2>Области применения</h2>
-    <ol>
-      <li>Безопасность и контроль доступа (офисы, дата-центры)</li>
-      <li>Мобильные устройства (разблокировка, авторизация)</li>
-      <li>Банковские сервисы и платежи</li>
-      <li>Государственные системы (паспорт, идентификация на границе)</li>
-      <li>Медицина, здравоохранение</li>
-    </ol>
-  </section>
+  <!-- 9. Рост и влияние + вывод -->
+  <section class="slide" id="s9">
+    <h2>Рост и влияние NVIDIA на рынок ИИ и HPC</h2>
+    <p>Взрывной рост выручки NVIDIA коррелирует с увеличением спроса на GPU в сфере искусственного интеллекта и центров обработки данных.</p>
+    <p class="lead">Компания превратилась в ключевого поставщика технологий для обучения нейросетей и проведения научных исследований в области высокопроизводительных вычислений.</p>
+    <p class="small">Источник: финансовые отчёты NVIDIA, 2023.</p>
 
-  <!-- 8. Преимущества -->
-  <section class="slide" id="pros">
-    <h2>Преимущества биометрии</h2>
+    <h3>Итоги технологического лидерства NVIDIA</h3>
     <ul>
-      <li>Удобство для пользователя (не нужно помнить пароли)</li>
-      <li>Трудно подделать по сравнению с простыми паролями</li>
-      <li>Возможность быстрой идентификации в массовых системах</li>
-    </ul>
-  </section>
-
-  <!-- 9. Риски и проблемы -->
-  <section class="slide" id="risks">
-    <h2>Риски, уязвимости и этика</h2>
-    <ul>
-      <li>Утечка биометрических данных — необратимость</li>
-      <li>Ошибка распознавания и дискриминация (bias)</li>
-      <li>Вопросы приватности и согласия</li>
-      <li>Атаки «presentation» (спуфинг, маски)</li>
-    </ul>
-    <p class="note">Рекомендуется: шифрование шаблонов, локальное хранение, многофакторная аутентификация.</p>
-  </section>
-
-  <!-- 10. Кейсы/примеры -->
-  <section class="slide" id="cases">
-    <h2>Кейсы использования</h2>
-    <ul>
-      <li>Банки: биометрия для подтверждения операций (face ID / fingerprint)</li>
-      <li>Аэропорты: e-Gates с распознаванием лица</li>
-      <li>Мобильные платежи: авторизация по отпечатку</li>
-      <li>Система контроля доступа на предприятии — интеграция с HR</li>
+      <li>Путь от неудачи NV1 до лидерства на рынке GPU и ИИ-решений.</li>
+      <li>Стратегия инноваций и ориентация на индустриальные стандарты DirectX, OpenGL и CUDA.</li>
+      <li>Фокус на экосистемах ИИ, суперкомпьютерах и дата-центрах вывел NVIDIA на вершину цифровой индустрии.</li>
     </ul>
   </section>
 
-  <!-- 11. Практические рекомендации -->
-  <section class="slide" id="recommendations">
-    <h2>Рекомендации при внедрении</h2>
-    <ol>
-      <li>Проводите тестирование на репрезентативных выборках</li>
-      <li>Применяйте многослойную безопасность (MFA)</li>
-      <li>Обеспечьте прозрачность и согласие пользователей</li>
-      <li>Регулярно обновляйте модели и патчивание уязвимостей</li>
-    </ol>
-  </section>
-
-  <!-- 12. Правовое поле -->
-  <section class="slide" id="law">
-    <h2>Законодательство и политика</h2>
-    <p>Во многих юрисдикциях обработка биометрии относится к особым категориям персональных данных — требуются дополнительные меры защиты и юридические основания (согласие, контракт и т.д.).</p>
-  </section>
-
-  <!-- 13. Выводы -->
-  <section class="slide" id="conclusions">
-    <h2>Выводы</h2>
-    <ul>
-      <li>Биометрия — мощный инструмент для идентификации, но не панацея.</li>
-      <li>Важно учитывать приватность, безопасность и этику.</li>
-      <li>Комбинация методов и защит (MFA, шифрование) повышает надёжность.</li>
-    </ul>
-  </section>
-
-  <!-- 14. Источники -->
-  <section class="slide" id="sources">
-    <h2>Источники и литература</h2>
-    <ul>
-      <li>Книги и обзоры по биометрии (обзорные статьи)</li>
-      <li>Статьи по безопасности биометрических систем</li>
-      <li>Рекомендации по оценке (NIST, ISO)</li>
-    </ul>
-    <p class="small">Добавьте конкретные ссылки и названия источников по своему усмотрению.</p>
-  </section>
-
-  <!-- 15. Вопросы -->
-  <section class="slide" id="questions">
+  <!-- 10. Вопросы -->
+  <section class="slide" id="s10">
     <h2>Вопросы?</h2>
-    <p>Спасибо за внимание — готов ответить на вопросы.</p>
+    <p>Спасибо за внимание.</p>
   </section>
 
   <footer class="badge">
-    <a href="https://github.com/shower/shower">Made with Shower</a>
+    <a href="https://github.com/shower/shower" target="_blank" rel="noopener">
+      Shower — презентации на HTML
+    </a>
   </footer>
 
   <div class="progress"></div>
 
-  <!-- Подключение движка (если он есть в node_modules) -->
   <script src="node_modules/@shower/core/dist/shower.js"></script>
 </body>
 </html>
